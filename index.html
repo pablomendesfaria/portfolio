@@ -268,20 +268,24 @@
 
     h1.hero-name {
       font-family: var(--font-display);
-      font-size: clamp(3rem, 8vw, 6rem);
+      font-size: clamp(2.6rem, 6.5vw, 5.5rem);
       font-weight: 800;
       letter-spacing: -0.04em;
-      line-height: 1.0;
+      line-height: 1.05;
       margin-bottom: 0.25rem;
       color: var(--text-primary);
+      white-space: nowrap;
     }
 
     h1.hero-name .surname {
-      display: block;
       background: linear-gradient(135deg, var(--text-primary) 40%, rgba(0,210,180,0.7) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+    }
+
+    @media (max-width: 600px) {
+      h1.hero-name { white-space: normal; font-size: clamp(2.2rem, 10vw, 3rem); }
     }
 
     .hero-role {
@@ -954,16 +958,13 @@
       <div class="hero-orb"></div>
       <div class="container">
         <div class="hero-inner">
-          <p class="hero-eyebrow">Disponível para projetos</p>
-          <h1 class="hero-name">
-            Pablo Mendes
-            <span class="surname">Faria</span>
-          </h1>
+          <p class="hero-eyebrow">Disponível para oportunidades</p>
+          <h1 class="hero-name">Pablo Mendes <span class="surname">Faria</span></h1>
           <p class="hero-role">
-            <strong>Engenheiro de Dados</strong> &amp; Desenvolvedor Backend
+            <strong>Desenvolvedor Back-end</strong> &amp; Engenheiro de Dados
           </p>
           <p class="hero-summary">
-            Construo pipelines de dados robustos, APIs escaláveis e soluções orientadas a dados que transformam informação bruta em insights acionáveis. Especialista em Python, ETL e arquitetura de dados.
+            Desenvolvedor Python com sólida experiência na construção de APIs escaláveis e otimização de sistemas de alta performance. Especialista na integração entre Engenharia de Software e Dados — combinando SQL avançado, pipelines ETL e arquitetura Cloud.
           </p>
           <div class="hero-ctas">
             <a href="#projects" class="btn btn-primary">
@@ -993,15 +994,15 @@
 
           <div class="about-text reveal">
             <p class="section-label">Sobre mim</p>
-            <h2 class="section-title">Dados como vantagem competitiva.</h2>
+            <h2 class="section-title">Software e dados, integrados.</h2>
             <p>
-              Sou um engenheiro focado em construir a infraestrutura que transforma dados brutos em decisões inteligentes. Minha atuação abrange desde a extração assíncrona de dados até a modelagem dimensional em warehouses modernos.
+              Desenvolvedor Python com sólida experiência na construção de <strong>APIs escaláveis</strong> com FastAPI e na otimização de sistemas de alta performance. Combino domínio de Engenharia de Software com expertise em Dados para entregar soluções end-to-end.
             </p>
             <p>
-              Tenho experiência prática com pipelines ETL completos, design de APIs RESTful com <strong>FastAPI</strong> e orquestração de transformações com <strong>dbt</strong>. Trabalho com dados de comércio exterior, integrando APIs públicas, armazenamento em cloud e visualização analítica.
+              Atuo com <strong>SQL avançado</strong>, pipelines de ETL automatizados com Apache Airflow, modelagem dimensional com <strong>dbt</strong> e arquitetura Cloud no Snowflake. Histórico comprovado em ambientes ágeis com foco em redução de tempo de processamento e qualidade de código.
             </p>
             <p>
-              Valorizo código limpo, documentação clara e soluções que escalam — desde um scraper assíncrono eficiente até um data warehouse dimensional no Snowflake.
+              Bacharel em <strong>Ciência da Computação</strong> pelo IFTM, com certificações em SQL (HackerRank) e Data Engineer Associate. Inglês B2 independente (EF SET).
             </p>
           </div>
 
@@ -1019,9 +1020,9 @@
             <div class="skills-grid">
               <span class="badge"><span class="badge-dot" style="background:#29b5e8"></span>Snowflake</span>
               <span class="badge"><span class="badge-dot" style="background:#ff6a00"></span>dbt</span>
+              <span class="badge"><span class="badge-dot" style="background:#017cee"></span>Airflow</span>
               <span class="badge"><span class="badge-dot" style="background:#e11d48"></span>Pandas</span>
               <span class="badge"><span class="badge-dot" style="background:#00d2b4"></span>Parquet</span>
-              <span class="badge"><span class="badge-dot" style="background:#4b5563"></span>CSV</span>
             </div>
 
             <p class="skills-label">Backend &amp; APIs</p>
@@ -1038,6 +1039,14 @@
               <span class="badge"><span class="badge-dot" style="background:#f05032"></span>Git</span>
               <span class="badge"><span class="badge-dot" style="background:#4a90d9"></span>Poetry</span>
               <span class="badge"><span class="badge-dot" style="background:#6c757d"></span>asyncio</span>
+            </div>
+
+            <p class="skills-label">Certificações</p>
+            <div class="skills-grid">
+              <span class="badge"><span class="badge-dot" style="background:#00d2b4"></span>Data Engineer Associate</span>
+              <span class="badge"><span class="badge-dot" style="background:#00d2b4"></span>SQL Associate</span>
+              <span class="badge"><span class="badge-dot" style="background:#00d2b4"></span>SQL Intermediate</span>
+              <span class="badge"><span class="badge-dot" style="background:#4a90d9"></span>EF SET B2 (Inglês)</span>
             </div>
           </div>
 
@@ -1072,13 +1081,13 @@
               <p class="project-title">ComexData ETL</p>
             </div>
             <p class="project-desc">
-              Pipeline ETL completo para dados de comércio exterior brasileiro. Extrai dados da API Comex Stat, carrega no Snowflake e aplica transformações dimensionais via dbt — gerando tabelas de fatos e dimensões prontas para análise com BI.
+              Pipeline ETL completo para dados de comércio exterior brasileiro. Extrai dados da API Comex Stat, orquestra o fluxo com Apache Airflow, carrega no Snowflake e aplica transformações dimensionais via dbt — gerando tabelas de fatos e dimensões prontas para análise em BI.
             </p>
             <div class="project-stack">
               <span class="stack-badge" style="background:rgba(41,181,232,0.12);color:#29b5e8;border:1px solid rgba(41,181,232,0.2)">Snowflake</span>
               <span class="stack-badge" style="background:rgba(255,106,0,0.1);color:#ff8c3a;border:1px solid rgba(255,106,0,0.2)">dbt</span>
+              <span class="stack-badge" style="background:rgba(1,124,238,0.1);color:#5aabf5;border:1px solid rgba(1,124,238,0.2)">Airflow</span>
               <span class="stack-badge" style="background:rgba(55,118,171,0.12);color:#5899c8;border:1px solid rgba(55,118,171,0.25)">Python</span>
-              <span class="stack-badge" style="background:rgba(0,210,180,0.08);color:#00d2b4;border:1px solid rgba(0,210,180,0.15)">Parquet</span>
             </div>
           </a>
 
@@ -1149,43 +1158,86 @@
 
         <div class="timeline">
 
+          <!-- Autônomo -->
           <div class="timeline-item reveal reveal-delay-1">
             <div class="timeline-dot"></div>
             <div class="timeline-meta">
-              <span class="timeline-period">2024 — presente</span>
-              <span class="timeline-type">PROJETOS PRÓPRIOS</span>
+              <span class="timeline-period">mai. 2024 — presente</span>
+              <span class="timeline-type">AUTÔNOMO</span>
             </div>
-            <p class="timeline-role">Engenheiro de Dados</p>
-            <p class="timeline-company">Projetos Open Source &amp; Portfólio Técnico</p>
+            <p class="timeline-role">Desenvolvedor Python</p>
+            <p class="timeline-company">Projetos Próprios &amp; Portfólio Técnico · Brasil</p>
             <p class="timeline-desc">
-              Desenvolvimento de soluções end-to-end envolvendo extração, transformação e carga de dados. Construção de pipelines ETL integrando APIs públicas, Snowflake e dbt. Desenvolvimento de aplicação web com FastAPI e PostgreSQL, containerizada com Docker. Implementação de scrapers assíncronos para coleta de dados de comércio internacional.
+              Atuação full-cycle no desenvolvimento de soluções de software e pipelines de dados, com foco em arquitetura, performance e escalabilidade. Desenvolveu Data Lakehouse completo para dados de comércio exterior, automatizando pipelines de ETL com Apache Airflow e dbt, com dados disponibilizados no Snowflake. Construiu API RESTful robusta com FastAPI e PostgreSQL, containerizada com Docker. Criou crawlers assíncronos de alta performance com AsyncIO e aiohttp para coleta de dados de mercado internacional.
             </p>
             <div class="timeline-techs">
               <span class="badge">Python</span>
-              <span class="badge">Snowflake</span>
-              <span class="badge">dbt</span>
               <span class="badge">FastAPI</span>
-              <span class="badge">Docker</span>
+              <span class="badge">Airflow</span>
+              <span class="badge">dbt</span>
+              <span class="badge">Snowflake</span>
               <span class="badge">PostgreSQL</span>
+              <span class="badge">Docker</span>
+              <span class="badge">aiohttp</span>
             </div>
           </div>
 
+          <!-- Enacom Jr -->
           <div class="timeline-item reveal reveal-delay-2">
             <div class="timeline-dot"></div>
             <div class="timeline-meta">
-              <span class="timeline-period">Em andamento</span>
-              <span class="timeline-type">FORMAÇÃO</span>
+              <span class="timeline-period">set. 2023 — mai. 2024 · 9 meses</span>
+              <span class="timeline-type">CLT</span>
             </div>
-            <p class="timeline-role">Engenharia / Ciência de Dados</p>
-            <p class="timeline-company">Formação técnica e projetos práticos</p>
+            <p class="timeline-role">Desenvolvedor Python Jr.</p>
+            <p class="timeline-company">Enacom Group · Brasil</p>
             <p class="timeline-desc">
-              Desenvolvimento contínuo de habilidades em engenharia de dados, modelagem dimensional (Star Schema), qualidade de dados, orquestração de pipelines e boas práticas de desenvolvimento de software. Uso de ferramentas modernas do ecossistema de dados como dbt, Snowflake, Pandas e FastAPI.
+              Atuou no ciclo completo de desenvolvimento em equipes multidisciplinares, focando na sustentação e evolução de sistemas críticos. Liderou refatoração de módulos complexos do sistema legado, melhorando a manutenibilidade e facilitando novas funcionalidades. Otimizou rotinas de processamento e consultas em banco de dados, diagnosticando gargalos de performance. Padronizou fluxos de versionamento com Git Flow e elaborou documentação técnica detalhada.
             </p>
             <div class="timeline-techs">
-              <span class="badge">Data Engineering</span>
-              <span class="badge">Data Modeling</span>
-              <span class="badge">ETL / ELT</span>
-              <span class="badge">REST APIs</span>
+              <span class="badge">Python</span>
+              <span class="badge">SQL</span>
+              <span class="badge">Git Flow</span>
+              <span class="badge">Refatoração</span>
+            </div>
+          </div>
+
+          <!-- Enacom Estágio -->
+          <div class="timeline-item reveal reveal-delay-3">
+            <div class="timeline-dot"></div>
+            <div class="timeline-meta">
+              <span class="timeline-period">out. 2022 — set. 2023 · 1 ano</span>
+              <span class="timeline-type">ESTÁGIO</span>
+            </div>
+            <p class="timeline-role">Estagiário Python</p>
+            <p class="timeline-company">Enacom Group · Belo Horizonte, MG</p>
+            <p class="timeline-desc">
+              Implementou algoritmos de otimização para simulações logísticas, alcançando redução de <strong>50% no tempo de execução</strong> das simulações. Desenvolveu e manteve aplicações Python aplicando boas práticas de programação e testes para garantir a qualidade das entregas.
+            </p>
+            <div class="timeline-techs">
+              <span class="badge">Python</span>
+              <span class="badge">Algoritmos</span>
+              <span class="badge">Otimização</span>
+              <span class="badge">Testes</span>
+            </div>
+          </div>
+
+          <!-- Formação -->
+          <div class="timeline-item reveal reveal-delay-4">
+            <div class="timeline-dot"></div>
+            <div class="timeline-meta">
+              <span class="timeline-period">fev. 2018 — nov. 2023</span>
+              <span class="timeline-type">FORMAÇÃO</span>
+            </div>
+            <p class="timeline-role">Bacharelado em Ciência da Computação</p>
+            <p class="timeline-company">Instituto Federal do Triângulo Mineiro — IFTM</p>
+            <p class="timeline-desc">
+              Graduação com foco em fundamentos de computação, estruturas de dados, algoritmos, banco de dados e engenharia de software. Base sólida que fundamenta a atuação técnica em desenvolvimento de sistemas e engenharia de dados.
+            </p>
+            <div class="timeline-techs">
+              <span class="badge">Algoritmos</span>
+              <span class="badge">Banco de Dados</span>
+              <span class="badge">Engenharia de Software</span>
             </div>
           </div>
 
@@ -1205,19 +1257,27 @@
               Estou aberto a oportunidades em engenharia de dados, desenvolvimento backend e consultoria técnica. Se você tem um projeto interessante ou uma vaga alinhada ao meu perfil, entre em contato.
             </p>
             <div class="contact-links">
-              <a href="https://www.linkedin.com/in/pablomendesfaria/" target="_blank" rel="noopener" class="btn btn-primary">
+              <a href="mailto:pablomendesfaria@gmail.com" class="btn btn-primary">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+                Enviar E-mail
+              </a>
+              <a href="https://www.linkedin.com/in/pablomendesfaria/" target="_blank" rel="noopener" class="btn btn-ghost">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-                Conectar no LinkedIn
+                LinkedIn
               </a>
               <a href="https://github.com/pablomendesfaria" target="_blank" rel="noopener" class="btn btn-ghost">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-                Ver GitHub
+                GitHub
               </a>
             </div>
           </div>
 
           <div class="contact-right reveal reveal-delay-2">
             <div class="contact-social">
+              <a href="mailto:pablomendesfaria@gmail.com" class="social-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+                pablomendesfaria@gmail.com
+              </a>
               <a href="https://www.linkedin.com/in/pablomendesfaria/" target="_blank" rel="noopener" class="social-link">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
                 linkedin.com/in/pablomendesfaria
