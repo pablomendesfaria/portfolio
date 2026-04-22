@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pablo Mendes Faria — Engenheiro de Dados</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ========================
+       RESET & VARIABLES
+    ======================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-base:     #080c10;
+      --bg-surface:  #0d1117;
+      --bg-card:     #111820;
+      --bg-card-hov: #141e29;
+      --border:      rgba(255,255,255,0.06);
+      --border-hov:  rgba(0,210,180,0.35);
+      --accent:      #00d2b4;
+      --accent-dim:  rgba(0,210,180,0.12);
+      --accent-glow: rgba(0,210,180,0.18);
+      --text-primary:   #eaf0f7;
+      --text-secondary: #7a8c9e;
+      --text-muted:     #3d505f;
+      --font-display: 'Outfit', sans-serif;
+      --font-body:    'Source Sans 3', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+      --radius:       12px;
+      --radius-lg:    20px;
+      --transition:   0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    ::selection {
+      background: var(--accent);
+      color: var(--bg-base);
+    }
+
+    /* ========================
+       NOISE TEXTURE
+    ======================== */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ========================
+       NAVBAR
+    ======================== */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background var(--transition), backdrop-filter var(--transition), border-color var(--transition);
+      border-bottom: 1px solid transparent;
+    }
+
+    nav.scrolled {
+      background: rgba(8,12,16,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom-color: var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .nav-burger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .nav-burger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text-secondary);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+
+    /* ========================
+       MAIN CONTAINER
+    ======================== */
+    main {
+      position: relative;
+      z-index: 1;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* ========================
+       SECTION SHARED
+    ======================== */
+    section {
+      padding: 7rem 0;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      margin-bottom: 1.25rem;
+    }
+
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 560px;
+      line-height: 1.75;
+    }
+
+    /* ========================
+       HERO
+    ======================== */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* grid overlay */
+    #hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,210,180,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,210,180,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 100%);
+      pointer-events: none;
+    }
+
+    /* glow orb */
+    .hero-orb {
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,210,180,0.07) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 40px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h1.hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      margin-bottom: 0.25rem;
+      color: var(--text-primary);
+    }
+
+    h1.hero-name .surname {
+      display: block;
+      background: linear-gradient(135deg, var(--text-primary) 40%, rgba(0,210,180,0.7) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-role {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      font-weight: 300;
+      color: var(--text-secondary);
+      letter-spacing: -0.01em;
+      margin: 1.5rem 0 2.5rem;
+    }
+
+    .hero-role strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .hero-summary {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 520px;
+      line-height: 1.8;
+      margin-bottom: 3rem;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all var(--transition);
+      letter-spacing: -0.01em;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg-base);
+      border: 1.5px solid var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--accent);
+      box-shadow: 0 0 24px var(--accent-glow);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1.5px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 2;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollLine {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(0.7); }
+    }
+
+    /* ========================
+       ABOUT
+    ======================== */
+    #about {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .about-text p {
+      color: var(--text-secondary);
+      margin-bottom: 1.25rem;
+      font-size: 1rem;
+      line-height: 1.85;
+    }
+
+    .about-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .about-text p strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .skills-col .section-label {
+      margin-top: 0;
+    }
+
+    .skills-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 2rem 0 1rem;
+    }
+
+    .skills-label:first-of-type {
+      margin-top: 0;
+    }
+
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      transition: all var(--transition);
+      cursor: default;
+    }
+
+    .badge:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ========================
+       PROJECTS
+    ======================== */
+    #projects {
+      padding-bottom: 6rem;
+    }
+
+    .projects-header {
+      margin-bottom: 4rem;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--card-accent, var(--accent)), transparent);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .project-card:hover {
+      background: var(--bg-card-hov);
+      border-color: var(--border-hov);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px var(--border-hov);
+    }
+
+    .project-card:hover::before {
+      opacity: 1;
+    }
+
+    .project-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .project-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.2rem;
+    }
+
+    .project-arrow {
+      color: var(--text-muted);
+      transition: color var(--transition), transform var(--transition);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .project-card:hover .project-arrow {
+      color: var(--accent);
+      transform: translate(3px, -3px);
+    }
+
+    .project-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+    }
+
+    .project-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      flex: 1;
+    }
+
+    .project-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .stack-badge {
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+
+    /* ========================
+       EXPERIENCE
+    ======================== */
+    #experience {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .exp-header {
+      margin-bottom: 4rem;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--accent), var(--border) 80%, transparent);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 3.5rem;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -2.4rem;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--bg-base);
+      border: 2px solid var(--accent);
+      transition: background var(--transition);
+    }
+
+    .timeline-item:hover .timeline-dot {
+      background: var(--accent);
+    }
+
+    .timeline-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .timeline-period {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+    }
+
+    .timeline-type {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.1rem 0.5rem;
+      letter-spacing: 0.05em;
+    }
+
+    .timeline-role {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-company {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+      margin-bottom: 0.75rem;
+    }
+
+    .timeline-desc {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      max-width: 680px;
+    }
+
+    .timeline-techs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 1rem;
+    }
+
+    /* ========================
+       CONTACT / FOOTER
+    ======================== */
+    #contact {
+      padding: 7rem 0 5rem;
+    }
+
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4rem;
+      align-items: end;
+      border-top: 1px solid var(--border);
+      padding-top: 4rem;
+    }
+
+    .contact-heading {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-heading .accent {
+      color: var(--accent);
+    }
+
+    .contact-sub {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      max-width: 440px;
+      line-height: 1.75;
+      margin-bottom: 2.5rem;
+    }
+
+    .contact-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .contact-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1.5rem;
+    }
+
+    .contact-social {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: flex-end;
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color var(--transition);
+    }
+
+    .social-link:hover {
+      color: var(--accent);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-copy {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .footer-made {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    .footer-made span {
+      color: var(--accent);
+    }
+
+    /* ========================
+       ANIMATIONS
+    ======================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* hero entrance */
+    .hero-inner > * {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: heroIn 0.8s ease forwards;
+    }
+
+    .hero-inner > *:nth-child(1) { animation-delay: 0.1s; }
+    .hero-inner > *:nth-child(2) { animation-delay: 0.2s; }
+    .hero-inner > *:nth-child(3) { animation-delay: 0.3s; }
+    .hero-inner > *:nth-child(4) { animation-delay: 0.4s; }
+    .hero-inner > *:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes heroIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========================
+       MOBILE MENU
+    ======================== */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(8,12,16,0.97);
+      backdrop-filter: blur(20px);
+      z-index: 99;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+
+    .mobile-menu.open {
+      display: flex;
+    }
+
+    .mobile-menu a {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-decoration: none;
+      letter-spacing: -0.03em;
+      transition: color var(--transition);
+    }
+
+    .mobile-menu a:hover {
+      color: var(--accent);
+    }
+
+    .mobile-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      transition: color var(--transition);
+    }
+
+    .mobile-close:hover {
+      color: var(--accent);
+    }
+
+    /* ========================
+       RESPONSIVE
+    ======================== */
+    @media (max-width: 900px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .contact-inner {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .contact-right {
+        align-items: flex-start;
+      }
+
+      .contact-social {
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 1.25rem; }
+      .container { padding: 0 1.25rem; }
+      section { padding: 5rem 0; }
+
+      .nav-links { display: none; }
+      .nav-burger { display: flex; }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-scroll { display: none; }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======================== NAVBAR ======================== -->
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo">PMF<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">SOBRE</a></li>
+      <li><a href="#projects">PROJETOS</a></li>
+      <li><a href="#experience">EXPERIÊNCIA</a></li>
+      <li><a href="#contact">CONTATO</a></li>
+    </ul>
+    <button class="nav-burger" id="menuBtn" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" id="menuClose" aria-label="Fechar menu">✕</button>
+    <a href="#about" class="menu-link">Sobre</a>
+    <a href="#projects" class="menu-link">Projetos</a>
+    <a href="#experience" class="menu-link">Experiência</a>
+    <a href="#contact" class="menu-link">Contato</a>
+  </div>
+
+  <main>
+
+    <!-- ======================== HERO ======================== -->
+    <section id="hero">
+      <div class="hero-orb"></div>
+      <div class="container">
+        <div class="hero-inner">
+          <p class="hero-eyebrow">Disponível para projetos</p>
+          <h1 class="hero-name">
+            Pablo Mendes
+            <span class="surname">Faria</span>
+          </h1>
+          <p class="hero-role">
+            <strong>Engenheiro de Dados</strong> &amp; Desenvolvedor Backend
+          </p>
+          <p class="hero-summary">
+            Construo pipelines de dados robustos, APIs escaláveis e soluções orientadas a dados que transformam informação bruta em insights acionáveis. Especialista em Python, ETL e arquitetura de dados.
+          </p>
+          <div class="hero-ctas">
+            <a href="#projects" class="btn btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              Ver Projetos
+            </a>
+            <a href="https://www.linkedin.com/in/pablomendesfaria/" target="_blank" rel="noopener" class="btn btn-ghost">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+              LinkedIn
+            </a>
+            <a href="https://github.com/pablomendesfaria" target="_blank" rel="noopener" class="btn btn-ghost">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+              GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="hero-scroll">
+        <div class="scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- ======================== ABOUT ======================== -->
+    <section id="about">
+      <div class="container">
+        <div class="about-grid">
+
+          <div class="about-text reveal">
+            <p class="section-label">Sobre mim</p>
+            <h2 class="section-title">Dados como vantagem competitiva.</h2>
+            <p>
+              Sou um engenheiro focado em construir a infraestrutura que transforma dados brutos em decisões inteligentes. Minha atuação abrange desde a extração assíncrona de dados até a modelagem dimensional em warehouses modernos.
+            </p>
+            <p>
+              Tenho experiência prática com pipelines ETL completos, design de APIs RESTful com <strong>FastAPI</strong> e orquestração de transformações com <strong>dbt</strong>. Trabalho com dados de comércio exterior, integrando APIs públicas, armazenamento em cloud e visualização analítica.
+            </p>
+            <p>
+              Valorizo código limpo, documentação clara e soluções que escalam — desde um scraper assíncrono eficiente até um data warehouse dimensional no Snowflake.
+            </p>
+          </div>
+
+          <div class="skills-col reveal reveal-delay-2">
+            <p class="section-label">Stack técnica</p>
+
+            <p class="skills-label">Linguagens</p>
+            <div class="skills-grid">
+              <span class="badge"><span class="badge-dot" style="background:#3776ab"></span>Python</span>
+              <span class="badge"><span class="badge-dot" style="background:#336791"></span>SQL</span>
+              <span class="badge"><span class="badge-dot" style="background:#e34f26"></span>HTML/CSS</span>
+            </div>
+
+            <p class="skills-label">Dados &amp; ETL</p>
+            <div class="skills-grid">
+              <span class="badge"><span class="badge-dot" style="background:#29b5e8"></span>Snowflake</span>
+              <span class="badge"><span class="badge-dot" style="background:#ff6a00"></span>dbt</span>
+              <span class="badge"><span class="badge-dot" style="background:#e11d48"></span>Pandas</span>
+              <span class="badge"><span class="badge-dot" style="background:#00d2b4"></span>Parquet</span>
+              <span class="badge"><span class="badge-dot" style="background:#4b5563"></span>CSV</span>
+            </div>
+
+            <p class="skills-label">Backend &amp; APIs</p>
+            <div class="skills-grid">
+              <span class="badge"><span class="badge-dot" style="background:#009688"></span>FastAPI</span>
+              <span class="badge"><span class="badge-dot" style="background:#3776ab"></span>aiohttp</span>
+              <span class="badge"><span class="badge-dot" style="background:#ff4b4b"></span>Streamlit</span>
+              <span class="badge"><span class="badge-dot" style="background:#336791"></span>PostgreSQL</span>
+            </div>
+
+            <p class="skills-label">Infra &amp; Ferramentas</p>
+            <div class="skills-grid">
+              <span class="badge"><span class="badge-dot" style="background:#2496ed"></span>Docker</span>
+              <span class="badge"><span class="badge-dot" style="background:#f05032"></span>Git</span>
+              <span class="badge"><span class="badge-dot" style="background:#4a90d9"></span>Poetry</span>
+              <span class="badge"><span class="badge-dot" style="background:#6c757d"></span>asyncio</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================== PROJECTS ======================== -->
+    <section id="projects">
+      <div class="container">
+        <div class="projects-header reveal">
+          <p class="section-label">Portfólio</p>
+          <h2 class="section-title">Projetos selecionados</h2>
+          <p class="section-subtitle">Soluções reais construídas com Python — de pipelines ETL a APIs RESTful e scrapers assíncronos.</p>
+        </div>
+
+        <div class="projects-grid">
+
+          <!-- Card 1: ComexData ETL -->
+          <a href="https://github.com/pablomendesfaria/comexdata-etl" target="_blank" rel="noopener"
+             class="project-card reveal reveal-delay-1"
+             style="--card-accent: #29b5e8;">
+            <div class="project-card-header">
+              <div class="project-icon" style="background: rgba(41,181,232,0.1); border: 1px solid rgba(41,181,232,0.2);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#29b5e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                </svg>
+              </div>
+              <svg class="project-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            </div>
+            <div>
+              <p class="project-title">ComexData ETL</p>
+            </div>
+            <p class="project-desc">
+              Pipeline ETL completo para dados de comércio exterior brasileiro. Extrai dados da API Comex Stat, carrega no Snowflake e aplica transformações dimensionais via dbt — gerando tabelas de fatos e dimensões prontas para análise com BI.
+            </p>
+            <div class="project-stack">
+              <span class="stack-badge" style="background:rgba(41,181,232,0.12);color:#29b5e8;border:1px solid rgba(41,181,232,0.2)">Snowflake</span>
+              <span class="stack-badge" style="background:rgba(255,106,0,0.1);color:#ff8c3a;border:1px solid rgba(255,106,0,0.2)">dbt</span>
+              <span class="stack-badge" style="background:rgba(55,118,171,0.12);color:#5899c8;border:1px solid rgba(55,118,171,0.25)">Python</span>
+              <span class="stack-badge" style="background:rgba(0,210,180,0.08);color:#00d2b4;border:1px solid rgba(0,210,180,0.15)">Parquet</span>
+            </div>
+          </a>
+
+          <!-- Card 2: Inventory CRUD -->
+          <a href="https://github.com/pablomendesfaria/inventory_crud" target="_blank" rel="noopener"
+             class="project-card reveal reveal-delay-2"
+             style="--card-accent: #009688;">
+            <div class="project-card-header">
+              <div class="project-icon" style="background: rgba(0,150,136,0.1); border: 1px solid rgba(0,150,136,0.2);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#009688" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+              </div>
+              <svg class="project-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            </div>
+            <div>
+              <p class="project-title">Inventory CRUD</p>
+            </div>
+            <p class="project-desc">
+              Aplicação web full-stack para gestão de inventário. Backend com FastAPI expondo endpoints RESTful, frontend em Streamlit, banco de dados PostgreSQL e toda a stack containerizada com Docker Compose — incluindo rastreamento de histórico de movimentação de produtos.
+            </p>
+            <div class="project-stack">
+              <span class="stack-badge" style="background:rgba(0,150,136,0.1);color:#00bfa5;border:1px solid rgba(0,150,136,0.2)">FastAPI</span>
+              <span class="stack-badge" style="background:rgba(255,75,75,0.1);color:#ff7070;border:1px solid rgba(255,75,75,0.2)">Streamlit</span>
+              <span class="stack-badge" style="background:rgba(51,103,145,0.12);color:#5899c8;border:1px solid rgba(51,103,145,0.25)">PostgreSQL</span>
+              <span class="stack-badge" style="background:rgba(36,150,237,0.1);color:#3daff7;border:1px solid rgba(36,150,237,0.2)">Docker</span>
+            </div>
+          </a>
+
+          <!-- Card 3: Korean Trade Scraper -->
+          <a href="https://github.com/pablomendesfaria/korean-international-trade-scraper" target="_blank" rel="noopener"
+             class="project-card reveal reveal-delay-3"
+             style="--card-accent: #e83e8c;">
+            <div class="project-card-header">
+              <div class="project-icon" style="background: rgba(232,62,140,0.08); border: 1px solid rgba(232,62,140,0.18);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e83e8c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+              </div>
+              <svg class="project-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            </div>
+            <div>
+              <p class="project-title">Korean Trade Scraper</p>
+            </div>
+            <p class="project-desc">
+              Scraper assíncrono de alta performance para coleta de estatísticas de comércio internacional entre Coreia do Sul e países parceiros. Utiliza API oculta descoberta via inspeção de página, com aiohttp e asyncio para requisições paralelas eficientes — exportando os dados estruturados em CSV.
+            </p>
+            <div class="project-stack">
+              <span class="stack-badge" style="background:rgba(55,118,171,0.12);color:#5899c8;border:1px solid rgba(55,118,171,0.25)">Python</span>
+              <span class="stack-badge" style="background:rgba(232,62,140,0.08);color:#e83e8c;border:1px solid rgba(232,62,140,0.2)">aiohttp</span>
+              <span class="stack-badge" style="background:rgba(108,117,125,0.12);color:#9ca3af;border:1px solid rgba(108,117,125,0.2)">asyncio</span>
+              <span class="stack-badge" style="background:rgba(225,29,72,0.1);color:#f87171;border:1px solid rgba(225,29,72,0.2)">Pandas</span>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================== EXPERIENCE ======================== -->
+    <section id="experience">
+      <div class="container">
+        <div class="exp-header reveal">
+          <p class="section-label">Trajetória</p>
+          <h2 class="section-title">Experiência profissional</h2>
+          <p class="section-subtitle">Formação e atuação voltadas para engenharia de dados, desenvolvimento backend e análise de dados.</p>
+        </div>
+
+        <div class="timeline">
+
+          <div class="timeline-item reveal reveal-delay-1">
+            <div class="timeline-dot"></div>
+            <div class="timeline-meta">
+              <span class="timeline-period">2024 — presente</span>
+              <span class="timeline-type">PROJETOS PRÓPRIOS</span>
+            </div>
+            <p class="timeline-role">Engenheiro de Dados</p>
+            <p class="timeline-company">Projetos Open Source &amp; Portfólio Técnico</p>
+            <p class="timeline-desc">
+              Desenvolvimento de soluções end-to-end envolvendo extração, transformação e carga de dados. Construção de pipelines ETL integrando APIs públicas, Snowflake e dbt. Desenvolvimento de aplicação web com FastAPI e PostgreSQL, containerizada com Docker. Implementação de scrapers assíncronos para coleta de dados de comércio internacional.
+            </p>
+            <div class="timeline-techs">
+              <span class="badge">Python</span>
+              <span class="badge">Snowflake</span>
+              <span class="badge">dbt</span>
+              <span class="badge">FastAPI</span>
+              <span class="badge">Docker</span>
+              <span class="badge">PostgreSQL</span>
+            </div>
+          </div>
+
+          <div class="timeline-item reveal reveal-delay-2">
+            <div class="timeline-dot"></div>
+            <div class="timeline-meta">
+              <span class="timeline-period">Em andamento</span>
+              <span class="timeline-type">FORMAÇÃO</span>
+            </div>
+            <p class="timeline-role">Engenharia / Ciência de Dados</p>
+            <p class="timeline-company">Formação técnica e projetos práticos</p>
+            <p class="timeline-desc">
+              Desenvolvimento contínuo de habilidades em engenharia de dados, modelagem dimensional (Star Schema), qualidade de dados, orquestração de pipelines e boas práticas de desenvolvimento de software. Uso de ferramentas modernas do ecossistema de dados como dbt, Snowflake, Pandas e FastAPI.
+            </p>
+            <div class="timeline-techs">
+              <span class="badge">Data Engineering</span>
+              <span class="badge">Data Modeling</span>
+              <span class="badge">ETL / ELT</span>
+              <span class="badge">REST APIs</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================== CONTACT ======================== -->
+    <section id="contact">
+      <div class="container">
+        <div class="contact-inner">
+          <div class="reveal">
+            <h2 class="contact-heading">
+              Vamos construir<br/>algo <span class="accent">juntos?</span>
+            </h2>
+            <p class="contact-sub">
+              Estou aberto a oportunidades em engenharia de dados, desenvolvimento backend e consultoria técnica. Se você tem um projeto interessante ou uma vaga alinhada ao meu perfil, entre em contato.
+            </p>
+            <div class="contact-links">
+              <a href="https://www.linkedin.com/in/pablomendesfaria/" target="_blank" rel="noopener" class="btn btn-primary">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                Conectar no LinkedIn
+              </a>
+              <a href="https://github.com/pablomendesfaria" target="_blank" rel="noopener" class="btn btn-ghost">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                Ver GitHub
+              </a>
+            </div>
+          </div>
+
+          <div class="contact-right reveal reveal-delay-2">
+            <div class="contact-social">
+              <a href="https://www.linkedin.com/in/pablomendesfaria/" target="_blank" rel="noopener" class="social-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                linkedin.com/in/pablomendesfaria
+              </a>
+              <a href="https://github.com/pablomendesfaria" target="_blank" rel="noopener" class="social-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                github.com/pablomendesfaria
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================== FOOTER ======================== -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <p class="footer-copy">&copy; 2025 Pablo Mendes Faria. Todos os direitos reservados.</p>
+        <p class="footer-made">Feito com <span>&#9679;</span> Python, dados e café.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======================== SCRIPTS ======================== -->
+  <script>
+    // --- Navbar scroll effect ---
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    // --- Mobile menu ---
+    const menuBtn  = document.getElementById('menuBtn');
+    const menuClose = document.getElementById('menuClose');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuLinks = document.querySelectorAll('.menu-link');
+
+    function openMenu() { mobileMenu.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeMenu() { mobileMenu.classList.remove('open'); document.body.style.overflow = ''; }
+
+    menuBtn.addEventListener('click', openMenu);
+    menuClose.addEventListener('click', closeMenu);
+    menuLinks.forEach(l => l.addEventListener('click', closeMenu));
+
+    // --- Scroll reveal via IntersectionObserver ---
+    const reveals = document.querySelectorAll('.reveal');
+
+    const revealObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    reveals.forEach(el => revealObs.observe(el));
+  </script>
+</body>
+</html>
