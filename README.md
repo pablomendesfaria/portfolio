@@ -11,7 +11,7 @@
 Contato:
 
 <div> 
-  <a href="https://github.com/pablomendesfaria" target="_blank"><img src="https://img.shields.io/badge/-Portfólio-%23AD0C6D?style=for-the-badge&Color=white" target="_blank"></a>
+  <a href="https://pablomendesfaria.github.io/portfolio/" target="_blank"><img src="https://img.shields.io/badge/-Portfólio-%23AD0C6D?style=for-the-badge&Color=white" target="_blank"></a>
   <a href="https://drive.google.com/file/d/11rXR1ZIckM-vzh_Hi2fPQ7t3-G9HUT68/view?usp=sharing" target="_blank"><img src="https://img.shields.io/badge/-Currículo-%23103B13?style=for-the-badge&Color=white" target="_blank"></a>
   <a href = "mailto:pablomendesfaria@gmail.com"><img src="https://img.shields.io/badge/-Gmail-%23E65602?style=for-the-badge&logo=gmail&logoColor=white" target="_blank"></a>
   <a href="https://www.linkedin.com/in/pablomendesfaria/" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a>
