@@ -92,6 +92,15 @@
       border-bottom-color: var(--border);
     }
 
+    .logo-dot {
+      color: var(--text-muted);
+    }
+
+    .logo-dev {
+      color: var(--accent);
+      font-weight: 400;
+    }
+
     .nav-logo {
       font-family: var(--font-display);
       font-weight: 700;
@@ -278,10 +287,7 @@
     }
 
     h1.hero-name .surname {
-      background: linear-gradient(135deg, var(--text-primary) 40%, rgba(0,210,180,0.7) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--text-primary);
     }
 
     @media (max-width: 600px) {
@@ -930,7 +936,7 @@
 
   <!-- ======================== NAVBAR ======================== -->
   <nav id="navbar">
-    <a href="#hero" class="nav-logo">PMF<span>.</span>dev</a>
+    <a href="#hero" class="nav-logo">PMF<span class="logo-dot">.</span><span class="logo-dev">dev</span></a>
     <ul class="nav-links">
       <li><a href="#about">SOBRE</a></li>
       <li><a href="#projects">PROJETOS</a></li>
