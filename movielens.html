@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MovieLens Beliefs Analytics | Pablo Mendes Faria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-base: #080c10;
+      --bg-surface: #0d1117;
+      --bg-card: #111820;
+      --bg-card-hov: #141e29;
+      --border: rgba(255,255,255,0.06);
+      --border-hov: rgba(251,188,4,0.35);
+      --accent: #fbbc04;
+      --accent-green: #34a853;
+      --accent-blue: #4285f4;
+      --accent-purple: #a78bfa;
+      --text-primary: #eaf0f7;
+      --text-secondary: #8a9bad;
+      --text-muted: #4d5e6d;
+      --font-display: 'Outfit', sans-serif;
+      --font-body: 'Source Sans 3', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius: 8px;
+      --radius-lg: 16px;
+      --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: 64px;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(8,12,16,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .logo-dot { color: #00d2b4; }
+    .logo-dev { color: #e34f26; font-weight: 400; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.05em;
+      transition: color var(--transition);
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    main {
+      position: relative;
+      z-index: 1;
+    }
+
+    .container {
+      width: min(1120px, calc(100% - 4rem));
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 88vh;
+      display: grid;
+      align-items: center;
+      padding: 8rem 0 5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .eyebrow,
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 7vw, 5.8rem);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+    }
+
+    h3 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      color: var(--text-secondary);
+      font-size: 1.02rem;
+    }
+
+    strong { color: var(--text-primary); font-weight: 600; }
+
+    .hero-copy {
+      max-width: 720px;
+      font-size: 1.16rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      min-height: 42px;
+      padding: 0 1.15rem;
+      border-radius: var(--radius);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 500;
+      transition: all var(--transition);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #15100a;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(251,188,4,0.24);
+    }
+
+    .btn-ghost {
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text-primary);
+      border-color: var(--border-hov);
+      background: rgba(251,188,4,0.08);
+    }
+
+    .summary-panel {
+      background: linear-gradient(180deg, rgba(251,188,4,0.08), rgba(17,24,32,0.95));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+
+    .summary-list {
+      display: grid;
+      gap: 1rem;
+      list-style: none;
+    }
+
+    .summary-list li {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    .summary-list li:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .summary-label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+
+    .summary-value {
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+
+    section {
+      padding: 6rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-head {
+      max-width: 700px;
+      margin-bottom: 2.5rem;
+    }
+
+    .grid-2,
+    .grid-3 {
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.35rem;
+    }
+
+    .card p,
+    .card li {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+
+    .card ul {
+      display: grid;
+      gap: 0.55rem;
+      padding-left: 1rem;
+    }
+
+    .metric {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 2rem;
+      line-height: 1;
+      color: var(--text-primary);
+      margin-bottom: 0.4rem;
+    }
+
+    .metric-note {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .stack-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .architecture {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .arch-step {
+      min-height: 112px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+
+    .arch-step span {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+    }
+
+    .arch-step strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      line-height: 1.15;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+    }
+
+    .logical-model-wrap {
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.8rem;
+    }
+
+    .logical-model-figure {
+      min-width: 960px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: rgba(8,12,16,0.36);
+    }
+
+    .logical-model-figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .model-note {
+      margin: 0.9rem 0 1.5rem;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+      background: var(--bg-card);
+    }
+
+    th,
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(255,255,255,0.02);
+    }
+
+    td {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+      color: var(--text-primary);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.08rem 0.32rem;
+    }
+
+    .dashboard-pdf {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .dashboard-pdf object {
+      display: block;
+      width: 100%;
+      height: min(78vh, 840px);
+      min-height: 620px;
+      border: 0;
+    }
+
+    .dashboard-pdf-fallback {
+      display: grid;
+      place-items: center;
+      min-height: 360px;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .dashboard-pdf-caption {
+      padding: 0.85rem 1rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .callout {
+      background: linear-gradient(90deg, rgba(66,133,244,0.12), rgba(52,168,83,0.08));
+      border: 1px solid rgba(66,133,244,0.22);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+
+    footer {
+      padding: 2rem 0;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .architecture {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .logical-model-wrap {
+        margin-right: -1rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      nav {
+        padding: 0 1.25rem;
+      }
+
+      .nav-links {
+        gap: 1rem;
+      }
+
+      .nav-links a {
+        font-size: 0.68rem;
+      }
+
+      .container {
+        width: min(100% - 2.5rem, 1120px);
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 7rem;
+      }
+
+      section {
+        padding: 4.5rem 0;
+      }
+
+      .architecture {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html#hero" class="nav-logo">PMF<span class="logo-dot">.</span><span class="logo-dev">code</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#projects">PROJETOS</a></li>
+      <li><a href="https://github.com/pablomendesfaria/movielens" target="_blank" rel="noopener">GITHUB</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <p class="eyebrow">Projeto em destaque</p>
+            <h1>MovieLens Beliefs Analytics</h1>
+            <p class="hero-copy">
+              Pipeline analítico end-to-end para transformar o dataset MovieLens Beliefs 2024 em uma base confiável de análise, com ingestão em cloud, modelagem dimensional, camada de consumo em BigQuery e dashboard no Metabase.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="https://github.com/pablomendesfaria/movielens" target="_blank" rel="noopener">
+                Ver repositório
+              </a>
+              <a class="btn btn-ghost" href="index.html#projects">
+                Voltar ao portfólio
+              </a>
+            </div>
+          </div>
+
+          <aside class="summary-panel" aria-label="Resumo do projeto">
+            <ul class="summary-list">
+              <li>
+                <span class="summary-label">Domínio</span>
+                <span class="summary-value">Analytics engineering, BI e modelagem de dados</span>
+              </li>
+              <li>
+                <span class="summary-label">Fonte</span>
+                <span class="summary-value">MovieLens Beliefs Dataset 2024</span>
+              </li>
+              <li>
+                <span class="summary-label">Pipeline</span>
+                <span class="summary-value">GCS, BigQuery, SQL, Metabase</span>
+              </li>
+              <li>
+                <span class="summary-label">Resultado</span>
+                <span class="summary-value">Marts dimensionais, views de BI e dashboard analítico</span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <p class="section-label">Visão executiva</p>
+          <h2>Base analítica pronta para decisão</h2>
+          <p>
+            O objetivo foi construir uma camada confiável para explorar ratings explícitos, crenças elicitadas, recomendações e atividade de usuários. O projeto organiza dados brutos em uma arquitetura em camadas e entrega métricas consumíveis por analistas e times de produto.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card">
+            <span class="metric">3M+</span>
+            <span class="metric-note">respostas de crença</span>
+            <p>Volume suficiente para análises robustas por filme, gênero, período e status de resposta.</p>
+          </article>
+          <article class="card">
+            <span class="metric">22k+</span>
+            <span class="metric-note">usuários em beliefs</span>
+            <p>Cobertura comportamental relevante mesmo sem atributos demográficos no dataset.</p>
+          </article>
+          <article class="card">
+            <span class="metric">12</span>
+            <span class="metric-note">views de BI</span>
+            <p>Camada de consumo criada para reduzir SQL repetido e padronizar métricas no dashboard.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <p class="section-label">Arquitetura</p>
+          <h2>Pipeline em camadas no GCP</h2>
+          <p>
+            A arquitetura separa preservação do dado bruto, padronização técnica, modelagem analítica e consumo. Essa divisão facilita auditoria, manutenção e evolução do modelo sem misturar responsabilidades.
+          </p>
+        </div>
+
+        <div class="architecture" aria-label="Fluxo de arquitetura do pipeline">
+          <div class="arch-step"><span>01</span><strong>CSVs MovieLens</strong></div>
+          <div class="arch-step"><span>02</span><strong>GCS bronze</strong></div>
+          <div class="arch-step"><span>03</span><strong>BigQuery raw external tables</strong></div>
+          <div class="arch-step"><span>04</span><strong>Staging tipado</strong></div>
+          <div class="arch-step"><span>05</span><strong>Marts dimensionais e views BI</strong></div>
+          <div class="arch-step"><span>06</span><strong>Dashboard Metabase</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <p class="section-label">Stack</p>
+          <h2>Tecnologias escolhidas por papel</h2>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <h3>Dados e cloud</h3>
+            <div class="stack-grid">
+              <span class="badge"><span class="badge-dot" style="background:#34a853"></span>GCS</span>
+              <span class="badge"><span class="badge-dot" style="background:#4285f4"></span>BigQuery</span>
+              <span class="badge"><span class="badge-dot" style="background:#4285f4"></span>SQL BigQuery</span>
+              <span class="badge"><span class="badge-dot" style="background:#a78bfa"></span>Kimball</span>
+            </div>
+          </article>
+          <article class="card">
+            <h3>Operação e consumo</h3>
+            <div class="stack-grid">
+              <span class="badge"><span class="badge-dot" style="background:#012456"></span>PowerShell</span>
+              <span class="badge"><span class="badge-dot" style="background:#2496ed"></span>Docker Compose</span>
+              <span class="badge"><span class="badge-dot" style="background:#509ee3"></span>Metabase</span>
+              <span class="badge"><span class="badge-dot" style="background:#f05032"></span>Git</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <p class="section-label">Decisões técnicas</p>
+          <h2>Escolhas que tornam o projeto auditável</h2>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <h3>Raw preservado</h3>
+            <p>As external tables mantêm todas as colunas como <code>STRING</code>, preservando o arquivo original e adiando decisões de tipagem para a camada correta.</p>
+          </article>
+          <article class="card">
+            <h3>Staging tipado</h3>
+            <p>A camada de staging converte ids, datas, timestamps e campos numéricos, além de padronizar nomes em <code>snake_case</code> e tratar sentinelas como <code>NA</code> e <code>-1</code>.</p>
+          </article>
+          <article class="card">
+            <h3>Modelo dimensional</h3>
+            <p>O consumo analítico usa dimensões conformadas, bridge multivalorada para gêneros e fatos com grãos declarados, reduzindo ambiguidade nas métricas.</p>
+          </article>
+          <article class="card">
+            <h3>Views de BI</h3>
+            <p>As views agregam e formatam métricas para o Metabase, evitando que regras de negócio fiquem espalhadas em consultas manuais do dashboard.</p>
+          </article>
+          <article class="card">
+            <h3>Catálogo incompleto</h3>
+            <p>Filmes presentes em fatos, mas ausentes em <code>movies.csv</code>, recebem placeholders controlados no padrão <code>Unknown movie &lt;movie_id&gt;</code>.</p>
+          </article>
+          <article class="card">
+            <h3>Gate de qualidade</h3>
+            <p>O pipeline inclui checagens para fontes vazias, unicidade de grãos, integridade referencial, faixas válidas e consistência condicional de campos de belief.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <p class="section-label">Contrato e modelagem</p>
+          <h2>Do evento bruto ao mart dimensional</h2>
+          <p>
+            A modelagem parte de cinco processos: avaliações explícitas, elicitação de crença, recomendações, curadoria de conjuntos de elicitação e catálogo de filmes. O processo central é a elicitação de crença, porque captura expectativas antes do consumo.
+          </p>
+        </div>
+
+        <div class="logical-model-wrap">
+          <figure class="logical-model-figure">
+            <img src="assets/movielens/logical-model.svg" alt="Diagrama ER da modelagem dimensional MovieLens com dim_user, dim_movie, fatos e bridge_movie_genre" />
+          </figure>
+        </div>
+
+        <p class="model-note">
+          O ERD acima representa a modelagem lógica dos marts: <code>dim_movie</code> conecta todos os fatos e a bridge de gêneros; <code>dim_user</code> conecta os fatos comportamentais de beliefs, ratings e recomendações. A tabela abaixo complementa o diagrama com o grão e o papel analítico de cada objeto.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Objeto</th>
+                <th>Grão</th>
+                <th>Papel analítico</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>dim_movie</code></td>
+                <td>Um filme por <code>movie_id</code></td>
+                <td>Dimensão conformada com título, título limpo, ano de lançamento e flag de ausência na fonte.</td>
+              </tr>
+              <tr>
+                <td><code>dim_user</code></td>
+                <td>Um usuário por <code>user_id</code></td>
+                <td>Registra presença e janelas observadas em ratings, beliefs e recomendações.</td>
+              </tr>
+              <tr>
+                <td><code>bridge_movie_genre</code></td>
+                <td>Um gênero por filme</td>
+                <td>Permite análise multigênero sem duplicar atributos em <code>dim_movie</code>.</td>
+              </tr>
+              <tr>
+                <td><code>fact_beliefs</code></td>
+                <td>Uma elicitação por usuário, filme, timestamp, <code>movie_idx</code> e fonte</td>
+                <td>Fato principal para respostas vistas, não vistas e sem resposta.</td>
+              </tr>
+              <tr>
+                <td><code>fact_ratings</code></td>
+                <td>Um rating explícito por usuário, filme, timestamp e arquivo de origem</td>
+                <td>Base para popularidade, qualidade observada e evolução temporal de avaliações.</td>
+              </tr>
+              <tr>
+                <td><code>fact_recommendations</code></td>
+                <td>Uma recomendação por usuário, filme e timestamp</td>
+                <td>Contexto de previsões do sistema para comparar com comportamento e crenças.</td>
+              </tr>
+              <tr>
+                <td><code>fact_elicitation_sets</code></td>
+                <td>Uma inclusão de filme por mês e origem</td>
+                <td>Contexto de curadoria para entender quais filmes entraram em conjuntos de elicitação.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <p class="section-label">Qualidade</p>
+          <h2>Confiança antes do dashboard</h2>
+          <p>
+            O projeto trata qualidade como critério de consumo, não como etapa cosmética. O gate final precisa retornar zero linhas para que o dashboard seja usado como fonte confiável.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <article class="card">
+            <h3>Integridade</h3>
+            <ul>
+              <li>Fontes raw não vazias.</li>
+              <li>Unicidade dos grãos declarados.</li>
+              <li>Fatos relacionados às dimensões esperadas.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Domínio</h3>
+            <ul>
+              <li>Ratings entre 0.5 e 5.0.</li>
+              <li>Certeza entre 1.0 e 5.0.</li>
+              <li><code>is_seen</code> restrito a <code>-1</code>, <code>0</code> ou <code>1</code>.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Semântica</h3>
+            <ul>
+              <li>Campos de filme visto e não visto separados por status.</li>
+              <li>Datas declaradas tratadas com status próprio.</li>
+              <li>Anos de lançamento plausíveis quando preenchidos.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <p class="section-label">Dashboard</p>
+          <h2>Metabase como camada de leitura</h2>
+          <p>
+            O dashboard resume volume geral, cobertura de beliefs, participação de usuários, rankings de filmes, gêneros, padrões temporais, confiança das previsões e relação entre popularidade e qualidade.
+          </p>
+        </div>
+
+        <figure class="dashboard-pdf">
+          <object data="assets/movielens/movielens-dashboard.pdf" type="application/pdf" aria-label="PDF do dashboard MovieLens no Metabase">
+            <div class="dashboard-pdf-fallback">
+              <p>
+                Seu navegador não exibiu o PDF embutido.
+                <a href="assets/movielens/movielens-dashboard.pdf" target="_blank" rel="noopener">Abrir o dashboard em PDF</a>.
+              </p>
+            </div>
+          </object>
+          <figcaption class="dashboard-pdf-caption">
+            PDF exportado do Metabase com as páginas do dashboard em alta qualidade: KPIs, cobertura de crença, rankings, gêneros, heatmaps, confiança e popularidade versus qualidade.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="callout">
+          <p class="section-label">Vamos conversar?</p>
+          <h2>O que este projeto demonstra</h2>
+          <p>
+            O MovieLens mostra capacidade de estruturar um produto de dados completo: entender a fonte, definir contrato, modelar fatos e dimensões, criar regras de qualidade, separar camadas técnicas e entregar uma interface de análise. Mais do que mover dados, o projeto transforma um dataset público em um ativo analítico governável e explicável.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://github.com/pablomendesfaria/movielens" target="_blank" rel="noopener">Abrir no GitHub</a>
+            <a class="btn btn-ghost" href="index.html#contact">Entrar em contato</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <span>Pablo Mendes Faria - MovieLens Beliefs Analytics</span>
+    </div>
+  </footer>
+</body>
+</html>

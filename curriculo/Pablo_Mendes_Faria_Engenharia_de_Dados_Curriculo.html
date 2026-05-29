@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pablo Mendes Faria - Engenharia de Dados</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 10mm 11mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: #17212f;
+      background: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10.4px;
+      line-height: 1.36;
+    }
+
+    a {
+      color: #145ea8;
+      text-decoration: none;
+    }
+
+    .page {
+      max-width: 190mm;
+      margin: 0 auto;
+    }
+
+    header {
+      border-bottom: 1.4px solid #17212f;
+      padding-bottom: 7px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 23px;
+      line-height: 1;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .title {
+      margin-top: 4px;
+      color: #145ea8;
+      font-size: 12.2px;
+      font-weight: 700;
+    }
+
+    .contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+      margin-top: 7px;
+      color: #39485d;
+      font-size: 9.6px;
+    }
+
+    section {
+      margin-top: 10px;
+    }
+
+    h2 {
+      margin: 0 0 5px;
+      padding-bottom: 3px;
+      border-bottom: 0.8px solid #d6dde8;
+      color: #17212f;
+      font-size: 11.4px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .summary {
+      color: #27384d;
+    }
+
+    .skills {
+      display: grid;
+      gap: 3px;
+    }
+
+    .skills p {
+      margin: 0;
+    }
+
+    .label {
+      color: #17212f;
+      font-weight: 700;
+    }
+
+    .item {
+      margin-top: 8px;
+    }
+
+    .item-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 3px;
+    }
+
+    .role,
+    .project-name {
+      color: #17212f;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .company,
+    .project-stack {
+      color: #145ea8;
+      font-weight: 700;
+    }
+
+    .period {
+      flex: 0 0 auto;
+      color: #5c6b7d;
+      font-size: 9.4px;
+      white-space: nowrap;
+    }
+
+    ul {
+      margin: 3px 0 0 15px;
+      padding: 0;
+    }
+
+    li {
+      margin: 2.4px 0;
+      padding-left: 2px;
+    }
+
+    .projects {
+      display: grid;
+      gap: 6px;
+    }
+
+    .project-line {
+      margin-top: 3px;
+    }
+
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .compact-list {
+      margin-left: 12px;
+    }
+
+    @media print {
+      body {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>Pablo Mendes Faria</h1>
+      <p class="title">Engenheiro de Dados | Python, SQL, BigQuery, Airflow, dbt</p>
+      <div class="contact">
+        <span>Remoto</span>
+        <span>(34) 9 9773-5545</span>
+        <a href="mailto:pablomendesfaria@gmail.com">pablomendesfaria@gmail.com</a>
+        <a href="https://pablomendesfaria.github.io/portfolio/">pablomendesfaria.github.io/portfolio</a>
+      </div>
+    </header>
+
+    <section>
+      <h2>Resumo</h2>
+      <p class="summary">
+        Desenvolvedor Python com foco em Engenharia de Dados, combinando SQL, ETL/ELT, modelagem dimensional, qualidade de dados e cloud. Experiencia pratica construindo pipelines analiticos em BigQuery/GCS, Snowflake, Airflow e dbt, com entrega de marts, views de BI e dashboards. Background em backend e APIs ajuda a criar solucoes de dados bem estruturadas, automatizadas e sustentaveis.
+      </p>
+    </section>
+
+    <section>
+      <h2>Competencias Tecnicas</h2>
+      <div class="skills">
+        <p><span class="label">Dados e SQL:</span> SQL avancado, BigQuery, Snowflake, PostgreSQL, SQL Server, MySQL, modelagem dimensional, Kimball, qualidade de dados.</p>
+        <p><span class="label">Pipelines e analytics engineering:</span> ETL/ELT, Apache Airflow, dbt-core, staging, marts dimensionais, views de BI, Pandas, NumPy, Parquet.</p>
+        <p><span class="label">Cloud e visualizacao:</span> GCP, GCS, Metabase, Docker, Docker Compose, Linux.</p>
+        <p><span class="label">Software:</span> Python, FastAPI, aiohttp, AsyncIO, APIs RESTful, SQLAlchemy, Git/Git Flow, testes e documentacao tecnica.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Experiencia</h2>
+
+      <div class="item">
+        <div class="item-head">
+          <div>
+            <span class="role">Engenheiro de Dados & Desenvolvedor Python</span> -
+            <span class="company">Projetos Proprios e Portfolio Tecnico</span>
+          </div>
+          <span class="period">mai. 2024 - presente</span>
+        </div>
+        <ul>
+          <li>Construiu o MovieLens Beliefs Analytics: pipeline em GCS e BigQuery com raw external tables, staging tipado, marts Kimball, checks de qualidade e dashboard no Metabase.</li>
+          <li>Desenvolveu o ComexData ETL, automatizando ingestao e transformacao de dados de comercio exterior com Airflow, dbt e Snowflake para consumo analitico.</li>
+          <li>Criou crawlers assincronos com AsyncIO/aiohttp para coleta de dados publicos e estruturacao de datasets para analise.</li>
+          <li>Entregou API FastAPI/PostgreSQL containerizada com Docker, aplicando boas praticas de backend em produto de dados operacional.</li>
+        </ul>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <div>
+            <span class="role">Desenvolvedor Python Jr.</span> -
+            <span class="company">Enacom Group</span>
+          </div>
+          <span class="period">set. 2023 - mai. 2024</span>
+        </div>
+        <ul>
+          <li>Atuou na sustentacao e evolucao de sistemas criticos, com foco em confiabilidade, manutencao e performance.</li>
+          <li>Refatorou modulos complexos de sistema legado, reduzindo acoplamento e facilitando novas funcionalidades.</li>
+          <li>Otimizou rotinas de processamento e consultas SQL, diagnosticando gargalos e corrigindo bugs de performance.</li>
+          <li>Padronizou fluxos com Git Flow e elaborou documentacao tecnica para manutencao e onboarding.</li>
+        </ul>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <div>
+            <span class="role">Estagiario Python</span> -
+            <span class="company">Enacom Group</span>
+          </div>
+          <span class="period">out. 2022 - set. 2023</span>
+        </div>
+        <ul>
+          <li>Implementou algoritmos de otimizacao para simulacoes logisticas, reduzindo o tempo de execucao em 50%.</li>
+          <li>Desenvolveu e manteve aplicacoes Python com boas praticas de programacao, testes e organizacao de codigo.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Projetos Selecionados</h2>
+      <div class="projects">
+        <p class="project-line">
+          <span class="project-name">MovieLens Beliefs Analytics</span> -
+          <span class="project-stack">GCS, BigQuery, SQL, Kimball, Metabase</span>:
+          pipeline analitico end-to-end para dataset MovieLens Beliefs 2024, com camadas raw/staging/marts, contrato de dados, checks de qualidade e dashboard.
+        </p>
+        <p class="project-line">
+          <span class="project-name">ComexData ETL</span> -
+          <span class="project-stack">Airflow, dbt, Snowflake, Python</span>:
+          pipeline para dados de comercio exterior com orquestracao, transformacoes dimensionais e disponibilizacao para analise.
+        </p>
+        <p class="project-line">
+          <span class="project-name">Korean Trade Scraper</span> -
+          <span class="project-stack">Python, aiohttp, AsyncIO, Pandas</span>:
+          scraper assincrono para coleta de estatisticas de comercio internacional e geracao de datasets estruturados.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Educacao e Certificacoes</h2>
+      <div class="edu-grid">
+        <p>
+          <span class="label">Bacharelado em Ciencia da Computacao</span><br />
+          Instituto Federal do Triangulo Mineiro - IFTM, 2023
+        </p>
+        <p>
+          <span class="label">Certificacoes:</span> Data Engineer Associate, Data Engineer e SQL Associate (DataCamp); SQL Basic e SQL Intermediate (HackerRank); Scientific Computing with Python (freeCodeCamp); Ingles B2 (EF SET).
+        </p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
